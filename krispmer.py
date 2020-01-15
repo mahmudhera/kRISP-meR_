@@ -32,6 +32,16 @@ def parse_arguments():
     return args
 
 
+def compute_personalized_target(target_filename, reads_filename):
+    """
+    generates the personalized target string
+    :param target_filename: target file as a fasta
+    :param reads_filename: reads file as a fastq
+    :return: string, personalized target
+    """
+    variant = detect_variant(target_filename, reads_filename)
+    return variant
+
 if __name__ == '__main__':
     variant = detect_variant('inputs/target20k.txt', 'inputs/read_staphylo.fastq')
     original_target = read_target_region('inputs/target20k.txt')
