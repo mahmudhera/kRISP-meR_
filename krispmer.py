@@ -30,7 +30,11 @@ def parse_arguments():
     print ('Finished parsing the arguments.\n')
     return args
 
+def find_personalized_target():
+
+
 
 if __name__ == '__main__':
     print ('Should test the parser now.')
-    print ('Extensively...')
+    args = parse_arguments()
+    print (args)
