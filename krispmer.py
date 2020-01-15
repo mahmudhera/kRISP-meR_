@@ -1,5 +1,6 @@
 import numpy as np
 import argparse
+from personalized.generate_personalized_target import *
 
 def parse_arguments():
     """
@@ -30,11 +31,9 @@ def parse_arguments():
     print ('Finished parsing the arguments.\n')
     return args
 
-def find_personalized_target():
-
-
 
 if __name__ == '__main__':
-    print ('Should test the parser now.')
-    args = parse_arguments()
-    print (args)
+    variant = detect_variant('inputs/target20k.txt', 'inputs/read_staphylo.fastq')
+    original_target = read_target_region('inputs/target20k.txt')
+    print(len(variant))
+    print(len(original_target))
