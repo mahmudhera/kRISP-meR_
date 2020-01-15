@@ -32,4 +32,4 @@ def parse_arguments():
 
 
 if __name__ == '__main__':
-    print ('Hi')
+    print ('Should test the parser now.')
