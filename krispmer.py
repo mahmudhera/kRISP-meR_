@@ -258,6 +258,6 @@ def krispmer_main(args):
     return list_candidates
 
 if __name__ == '__main__':
-    target_string = 'ACGTGTGTGTCACGCAGCAGCAGCAGCAGCGACAGCAGCAGCAGTCAGCTACGACTCAGCAT'
-    dic = generate_k_spectrum_of_target_and_count(target_string, 'output/jf_binary_file.jf')
-    print(dic)
+    args = parse_arguments()
+    gRNAs = krispmer_main(args)
+    print (gRNAs)
