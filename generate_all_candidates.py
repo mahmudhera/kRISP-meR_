@@ -67,10 +67,9 @@ def reverse_complement(s):
 
 
 # [(i-gRNA_len, target[i-gRNA_len:i+len(PAM)]) for i in findall(PAM, target)]
-def get_list_of_candidates(target_file, PAM, gRNA_length):
-    with open(target_file, 'r') as myfile:
-        target = myfile.read().replace('\n', '')
-        target_rev = reverse_complement(target)
+def get_list_of_candidates(target_string, PAM, gRNA_length):
+    target = target_string
+    target_rev = reverse_complement(target)
     PAMs = NFiller(PAM).get_list()
     candidates_rev = []
     candidates = []
