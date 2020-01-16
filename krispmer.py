@@ -8,6 +8,7 @@ import dna_jellyfish as jellyfish
 from MLE import get_target_coverage_after_refining
 from generate_adjacent_mers import generate_adjacent_mers
 from get_cfd_score import get_score
+from matplotlib import pyplot as plt
 
 pam = "NGG"
 grna_length = 20
@@ -91,8 +92,10 @@ def plot_histogram(histo_data):
     :param histo_data: a dictionary containing the histogram data
     :return: None
     """
-    # todo: complete this
-    return None
+    lists = sorted(histo_data.items())
+    x, y = zip(*lists)
+    plt.plot(x, y)
+    plt.show()
 
 
 def generate_k_spectrum_of_target_and_count(target_string, jellyfish_count_file, max_k_limit=200, k=15):
