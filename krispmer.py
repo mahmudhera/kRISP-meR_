@@ -35,7 +35,7 @@ def parse_arguments():
                         action="store_true")
     parser.add_argument("-e", "--em", help="performs expectation maximization to determine prior probabilities",
                         action="store_true")
-    parser.add_argument("-t", "--test", help="test the pipeline with genomic analysis",
+    parser.add_argument("-t", "--test", help="test the pipeline with analysis made with reference genome",
                         action="store_true")
     parser.add_argument("reads_file", type=str, help="provide the filename of the reads file with path")
     parser.add_argument("target_file", type=str,
