@@ -36,8 +36,11 @@ def parse_arguments():
                         action="store_true")
     parser.add_argument("-e", "--em", help="performs expectation maximization to determine prior probabilities",
                         action="store_true")
+    parser.add_argument("-v", "--detect_variant", help="uses bowtie2, samtools and pilon to detect genomic variation",
+                        action="store_true")
     parser.add_argument("-t", "--test", help="test the pipeline with analysis made with reference genome",
                         action="store_true")
+    parser.add_argument("-r", "--readcoverage", type=int, help="enter the read coverage as an INTEGER")
     parser.add_argument("reads_file", type=str, help="provide the filename of the reads file with path")
     parser.add_argument("target_file", type=str,
                         help="provide the filename of the file where there is the target region. Specify with full "
@@ -51,6 +54,9 @@ def parse_arguments():
     args_after_parsing = parser.parse_args()
     if args_after_parsing.max_hd > 3 or args_after_parsing.max_hd < 0:
         print ('Please enter correct value of hamming distance.')
+        exit(-1)
+    if args_after_parsing.preprocess is False and args_after_parsing.readcoverage is None:
+        print ('Please either choose to preprocess or manually enter read coverage.')
         exit(-1)
     print ('Finished parsing the arguments.\n')
     return args_after_parsing
@@ -95,6 +101,8 @@ def plot_histogram(histo_data):
     lists = sorted(histo_data.items())
     x, y = zip(*lists)
     plt.plot(x, y)
+    plt.ylim(0,100)
+    plt.xlim(0,20)
     plt.show()
 
 
@@ -230,16 +238,19 @@ def krispmer_main(parsed_args):
     print('Completed the initial run.\n')
 
     # personalized gRNA as a string
-    print ('generating personalized version of the target\n')
-    modified_target_string = detect_variant(parsed_args.target_file, parsed_args.reads_file)
-    print ('personalized target identified\n')
+    if args.detect_variant:
+        print ('generating personalized version of the target\n')
+        modified_target_string = detect_variant(parsed_args.target_file, parsed_args.reads_file)
+        print ('personalized target identified\n')
+    else:
+        modified_target_string = read_target_region(parsed_args.target_file)
 
     # generate k-mer spectrum histogram data
     print('generating histogram data from the initial Jellyfish database.')
     histogram_data_dictionary = generate_k_spectrum_histogram(jellyfish_binary_file)
     print('finished generating histogram data\n')
 
-    # do the preprocesses
+    # do the preprocess
     global read_coverage
     if parsed_args.preprocess:
         print ('running the initial processing.')
