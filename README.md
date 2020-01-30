@@ -25,3 +25,6 @@ python setup.py install --prefix=$PREFIX
 ```
 
 Python binding issue still remains. Will resolve this later.
+
+4. Bowtie2
+5. Pilon
