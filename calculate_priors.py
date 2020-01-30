@@ -42,7 +42,7 @@ def determine_points(histo_data):
         if histo_data[i-1] < histo_data[i] and histo_data[i+1] < histo_data[i]:
             higher = i
             break
-    return lower, higher
+    return lower+1, higher+1
 
 def determine_inversion_point(histo_data):
     return determine_points(histo_data)[0]

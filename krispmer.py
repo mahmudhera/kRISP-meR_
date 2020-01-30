@@ -170,7 +170,7 @@ def get_probability(count, k):
 
 
 def annotate_guides_with_score(candidates_count_dictionary, jellyfish_filename, priors, posteriors, max_hd,
-                               target_string):
+                               target_string, target_coverage):
     iteration_count = 0
     list_candidates = []
     for candidate in list(candidates_count_dictionary.keys()):
@@ -205,7 +205,7 @@ def annotate_guides_with_score(candidates_count_dictionary, jellyfish_filename, 
             value2 = value2 + cp * accum
         if value1 <= 0.0 or flag is False:
             continue
-        score = 1.0 * value2 / value1
+        score = 1.0 * value2 / (value1 * target_coverage)
         qf = jellyfish.QueryMerFile(jellyfish_filename)
         merDNA = jellyfish.MerDNA(candidate)
         k = max(qf[merDNA], qf[jellyfish.MerDNA(reverse_complement(candidate))])
@@ -286,7 +286,7 @@ def krispmer_main(parsed_args):
     # annotate all guides
     print('processing total ' + str(len(list(candidates_count_dictionary.keys()))) + ' candidate gRNAs')
     list_candidates = annotate_guides_with_score(candidates_count_dictionary, jellyfish_binary_file, priors, posteriors,
-                                                 parsed_args.max_hd, modified_target_string)
+                                                 parsed_args.max_hd, modified_target_string, target_coverage)
     return list_candidates
 
 
