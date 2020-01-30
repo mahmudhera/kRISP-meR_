@@ -79,7 +79,8 @@ def get_list_of_candidates(target_string, PAM, gRNA_length):
     trie_dic = trie.trie()
     for candidate in candidates:
         key = candidate[1]
-        trie_dic[key] = '+'
+        if key not in trie_dic.keys():
+            trie_dic[key] = '+'
     for candidate in candidates_rev:
         key = reverse_complement(candidate[1])
         if key not in trie_dic.keys():
