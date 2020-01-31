@@ -22,12 +22,11 @@ read_coverage = -1
 target_coverage = -1
 
 
-def parse_arguments():
+def generate_parser():
     """
-    parses the arguments
-    :return: the parsed argument
+    Generates the parser for appropriate parsing, then returns the parser
+    :return: the parser
     """
-    print ('parsing the passed arguments...')
     parser = argparse.ArgumentParser()
 
     # positional arguments
@@ -41,11 +40,11 @@ def parse_arguments():
                              "that you wish for the pipeline to analyze. Make sure the hamming distance is between 0 "
                              "and 3, inclusive")
 
-    #optional arguments
+    # optional arguments
     parser.add_argument("-p", "--preprocess",
                         help="performs the initial processing on the sequencing reads and helps you find the read "
                              "coverage. If you already know the read coverage and do not wish to preprocess, "
-                             "then provide the value of the read coverage with the flag -r", 
+                             "then provide the value of the read coverage with the flag -r",
                         action="store_true")
     parser.add_argument("-e", "--em", help="performs expectation maximization to determine prior probabilities",
                         action="store_true")
@@ -61,8 +60,19 @@ def parse_arguments():
     parser.add_argument("-c", "--cutoff_score", type=float, help="enter the maximum score of the guides you wish to be")
     parser.add_argument("-g", "--genome", type=str, help="fasta filename of genome, only needed if you want to test")
     parser.add_argument("-a", "--altPAMs", type=str, help="Type in the pams that you want to work with", nargs='+')
+    return parser
 
-    args_after_parsing = parser.parse_args()
+
+def parse_arguments(arg_string = None):
+    """
+    parses the arguments
+    :return: the parsed argument
+    """
+    print ('parsing the passed arguments...')
+
+    parser = generate_parser()
+    args_after_parsing = parser.parse_args(arg_string)
+
     if args_after_parsing.max_hd > 3 or args_after_parsing.max_hd < 0:
         print ('Please enter correct value of hamming distance.')
         exit(-1)
@@ -83,7 +93,7 @@ def initial_jellyfish_run(reads_file_for_jellyfish):
         candidate_length) + " -s 100M -o " + jf_count_file + " -t 20 -C " + reads_file_for_jellyfish
     jf_command_args = jf_command.split(" ")
     # todo: uncomment this later
-    #subprocess.call(jf_command_args)
+    # subprocess.call(jf_command_args)
     return jf_count_file
 
 
@@ -113,8 +123,8 @@ def plot_histogram(histo_data):
     lists = sorted(histo_data.items())
     x, y = zip(*lists)
     plt.plot(x, y)
-    plt.ylim(0,100)
-    plt.xlim(0,20)
+    plt.ylim(0, 100)
+    plt.xlim(0, 20)
     plt.show()
 
 
@@ -172,7 +182,7 @@ def get_probability(count, k):
         return 0.0
     if probability_table[count][k] != -1:
         return probability_table[count][k]
-    #total = 0.0
+    # total = 0.0
     for k1 in range(max_k):
         probability_table[count][k1] = get_poisson(count, k1)
         # total = total + probability_table[count][k1]
@@ -274,7 +284,9 @@ def krispmer_main(parsed_args):
 
     # determine all candidate list
     print('generating list of potential candidates...')
-    candidates_count_dictionary = candidate_generator.get_list_of_candidates(modified_target_string, pam, grna_length, args.stop, args.consider_negative, args.altPAMs)
+    candidates_count_dictionary = candidate_generator.get_list_of_candidates(modified_target_string, pam, grna_length,
+                                                                             args.stop, args.consider_negative,
+                                                                             args.altPAMs)
     print('finished generating list of potential candidates...\n')
 
     # determine priors, posteriors and read-coverage using EM
@@ -299,11 +311,15 @@ def krispmer_main(parsed_args):
     print('processing total ' + str(len(list(candidates_count_dictionary.keys()))) + ' candidate gRNAs')
     list_candidates = annotate_guides_with_score(candidates_count_dictionary, jellyfish_binary_file, priors, posteriors,
                                                  parsed_args.max_hd, modified_target_string, target_coverage)
-    list_candidates = [c for c in list_candidates if c[1]<=parsed_args.cutoff_score]
+    list_candidates = [c for c in list_candidates if c[1] <= parsed_args.cutoff_score]
     return list_candidates
 
 
 if __name__ == '__main__':
-    args = parse_arguments()
-    gRNAs = krispmer_main(args)
-    print (gRNAs)
+    arg_string = 'inputs/read_staphylo.fastq inputs/target20k.txt output/out 0 -r 14 -a AGG TGG'
+    cut_off_scores = [2.0, 2.5, 3.0, 3.5]
+    for c in cut_off_scores:
+        arg_string_full = arg_string + ' -c ' + str(c)
+        args = parse_arguments(arg_string_full.split())
+        gRNAs = krispmer_main(args)
+        print ( len(gRNAs) )
