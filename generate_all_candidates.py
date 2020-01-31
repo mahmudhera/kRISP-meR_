@@ -1,6 +1,5 @@
 from Bio import trie
 
-
 class NFiller:
     def __init__(self, PAM):
         self.PAM = PAM
@@ -67,7 +66,7 @@ def reverse_complement(s):
 
 
 # [(i-gRNA_len, target[i-gRNA_len:i+len(PAM)]) for i in findall(PAM, target)]
-def get_list_of_candidates(target_string, PAM, gRNA_length):
+def get_list_of_candidates(target_string, PAM, gRNA_length, exclude_stop_codons):
     target = target_string
     target_rev = reverse_complement(target)
     PAMs = NFiller(PAM).get_list()
@@ -79,9 +78,13 @@ def get_list_of_candidates(target_string, PAM, gRNA_length):
     trie_dic = trie.trie()
     for candidate in candidates:
         key = candidate[1]
+        if exclude_stop_codons and ('TAG' in key or 'TAA' in key or 'TGA' in key):
+            continue
         if key not in trie_dic.keys():
             trie_dic[key] = '+'
     for candidate in candidates_rev:
+        if exclude_stop_codons and ('TAG' in key or 'TAA' in key or 'TGA' in key):
+            continue
         key = reverse_complement(candidate[1])
         if key not in trie_dic.keys():
             trie_dic[key] = '-'

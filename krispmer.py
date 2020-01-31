@@ -36,6 +36,8 @@ def parse_arguments():
                         action="store_true")
     parser.add_argument("-e", "--em", help="performs expectation maximization to determine prior probabilities",
                         action="store_true")
+    parser.add_argument("-s", "--stop", help="identify stop codons in guides and exclude those guides",
+                        action="store_true")
     parser.add_argument("-v", "--detect_variant", help="uses bowtie2, samtools and pilon to detect genomic variation",
                         action="store_true")
     parser.add_argument("-t", "--test", help="test the pipeline with analysis made with reference genome",
@@ -71,7 +73,8 @@ def initial_jellyfish_run(reads_file_for_jellyfish):
     jf_command = "jellyfish count -m " + str(
         candidate_length) + " -s 100M -o " + jf_count_file + " -t 20 -C " + reads_file_for_jellyfish
     jf_command_args = jf_command.split(" ")
-    subprocess.call(jf_command_args)
+    # todo: uncomment this later
+    #subprocess.call(jf_command_args)
     return jf_count_file
 
 
@@ -262,7 +265,7 @@ def krispmer_main(parsed_args):
 
     # determine all candidate list
     print('generating list of potential candidates...')
-    candidates_count_dictionary = candidate_generator.get_list_of_candidates(modified_target_string, pam, grna_length)
+    candidates_count_dictionary = candidate_generator.get_list_of_candidates(modified_target_string, pam, grna_length, args.stop)
     print('finished generating list of potential candidates...\n')
 
     # determine priors, posteriors and read-coverage using EM
