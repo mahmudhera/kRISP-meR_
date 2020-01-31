@@ -29,6 +29,19 @@ def parse_arguments():
     """
     print ('parsing the passed arguments...')
     parser = argparse.ArgumentParser()
+
+    # positional arguments
+    parser.add_argument("reads_file", type=str, help="provide the filename of the reads file with path")
+    parser.add_argument("target_file", type=str,
+                        help="provide the filename of the file where there is the target region. Specify with full "
+                             "path.")
+    parser.add_argument("scores_file", type=str, help="provide the name of the file where you wish to write the scores")
+    parser.add_argument("max_hd", type=int,
+                        help="provide the maximum hamming distance between the candidate gRNA and the genomic k-mer "
+                             "that you wish for the pipeline to analyze. Make sure the hamming distance is between 0 "
+                             "and 3, inclusive")
+
+    #optional arguments
     parser.add_argument("-p", "--preprocess",
                         help="performs the initial processing on the sequencing reads and helps you find the read "
                              "coverage. If you already know the read coverage and do not wish to preprocess, "
@@ -42,17 +55,13 @@ def parse_arguments():
                         action="store_true")
     parser.add_argument("-t", "--test", help="test the pipeline with analysis made with reference genome",
                         action="store_true")
+    parser.add_argument("-n", "--consider_negative", help="scans the -ve strand for finding the guides",
+                        action="store_true")
     parser.add_argument("-r", "--readcoverage", type=int, help="enter the read coverage as an INTEGER")
-    parser.add_argument("reads_file", type=str, help="provide the filename of the reads file with path")
-    parser.add_argument("target_file", type=str,
-                        help="provide the filename of the file where there is the target region. Specify with full "
-                             "path.") 
+    parser.add_argument("-c", "--cutoff_score", type=float, help="enter the maximum score of the guides you wish to be")
     parser.add_argument("-g", "--genome", type=str, help="fasta filename of genome, only needed if you want to test")
-    parser.add_argument("scores_file", type=str, help="provide the name of the file where you wish to write the scores")
-    parser.add_argument("max_hd", type=int,
-                        help="provide the maximum hamming distance between the candidate gRNA and the genomic k-mer "
-                             "that you wish for the pipeline to analyze. Make sure the hamming distance is between 0 "
-                             "and 3, inclusive") 
+    parser.add_argument("-a", "--altPAMs", type=str, help="Type in the pams that you want to work with", nargs='+')
+
     args_after_parsing = parser.parse_args()
     if args_after_parsing.max_hd > 3 or args_after_parsing.max_hd < 0:
         print ('Please enter correct value of hamming distance.')
@@ -265,7 +274,7 @@ def krispmer_main(parsed_args):
 
     # determine all candidate list
     print('generating list of potential candidates...')
-    candidates_count_dictionary = candidate_generator.get_list_of_candidates(modified_target_string, pam, grna_length, args.stop)
+    candidates_count_dictionary = candidate_generator.get_list_of_candidates(modified_target_string, pam, grna_length, args.stop, args.consider_negative, args.altPAMs)
     print('finished generating list of potential candidates...\n')
 
     # determine priors, posteriors and read-coverage using EM
@@ -290,6 +299,7 @@ def krispmer_main(parsed_args):
     print('processing total ' + str(len(list(candidates_count_dictionary.keys()))) + ' candidate gRNAs')
     list_candidates = annotate_guides_with_score(candidates_count_dictionary, jellyfish_binary_file, priors, posteriors,
                                                  parsed_args.max_hd, modified_target_string, target_coverage)
+    list_candidates = [c for c in list_candidates if c[1]<=parsed_args.cutoff_score]
     return list_candidates
 
 

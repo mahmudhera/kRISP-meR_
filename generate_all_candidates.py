@@ -66,15 +66,26 @@ def reverse_complement(s):
 
 
 # [(i-gRNA_len, target[i-gRNA_len:i+len(PAM)]) for i in findall(PAM, target)]
-def get_list_of_candidates(target_string, PAM, gRNA_length, exclude_stop_codons):
+def get_list_of_candidates(target_string, PAM, gRNA_length, exclude_stop_codons, consider_negative, alt_pams):
     target = target_string
-    target_rev = reverse_complement(target)
-    PAMs = NFiller(PAM).get_list()
+    if consider_negative:
+        target_rev = reverse_complement(target)
+    if alt_pams is None:
+        PAMs = NFiller(PAM).get_list()
+    else:
+        for pam in alt_pams:
+            if len(pam) != 3:
+                raise ValueError('Length of one or more PAMs not set to 3')
+            for character in pam:
+                if character != 'A' and character != 'C' and character != 'G' and character != 'T':
+                    raise ValueError('Invalid PAM has been entered')
+        PAMs = alt_pams
     candidates_rev = []
     candidates = []
     for PAM in PAMs:
         candidates.extend(find_candidates(target, PAM, gRNA_length))
-        candidates_rev.extend(find_candidates(target_rev, PAM, gRNA_length))
+        if consider_negative:
+            candidates_rev.extend(find_candidates(target_rev, PAM, gRNA_length))
     trie_dic = trie.trie()
     for candidate in candidates:
         key = candidate[1]
@@ -83,9 +94,12 @@ def get_list_of_candidates(target_string, PAM, gRNA_length, exclude_stop_codons)
         if key not in trie_dic.keys():
             trie_dic[key] = '+'
     for candidate in candidates_rev:
-        if exclude_stop_codons and ('TAG' in key or 'TAA' in key or 'TGA' in key):
+        if exclude_stop_codons and ('TAG' in candidate[1] or 'TAA' in candidate[1] or 'TGA' in candidate[1]):
             continue
         key = reverse_complement(candidate[1])
         if key not in trie_dic.keys():
             trie_dic[key] = '-'
     return trie_dic
+
+#python krispmer.py inputs/read_staphylo.fastq inputs/target20k.txt output/out 0 -ns -r 14 -P AGG
+
