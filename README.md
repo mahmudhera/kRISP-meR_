@@ -12,6 +12,7 @@ This tool is designed for:
 Other dependencies are elaborated separately.
 
 ## Dependencies You Need to Install
+The following installation instructions are _only to help you out_. These installation instructions are **NOT** mandatory to follow. You can install these any way you like. However, if you are having a hard time doing so by yourself, you may find these instructions useful.
 * **samtools**: You can install samtools using the following commands:
 ```buildoutcfg
 sudo apt-get update -y
