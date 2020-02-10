@@ -1,6 +1,6 @@
 ![image](https://img.shields.io/badge/%20-linux-orange)
 ![image](https://img.shields.io/badge/%20-python-blue)
-![image](https://img.shields.io/badge/%20-crispr-yellowgreen)
+![image](https://img.shields.io/badge/crispr-referencefree-yellowgreen)
 # kRISP-mER
 Reference free guide RNA designing tool for CRISPR
 
@@ -14,7 +14,7 @@ This tool is designed for:
 
 Other dependencies are elaborated separately.
 
-### Dependencies you need to install
+## Dependencies you need to install
 The following installation instructions are _only to help you out_. These installation instructions are **NOT** mandatory to follow. You can install these any way you like. However, if you are having a hard time doing so by yourself, you may find these instructions useful.
 * **samtools**: You can install samtools using the following commands:
 ```buildoutcfg
@@ -42,15 +42,15 @@ python setup.py install --prefix=$PREFIX
 * **sklearn**: If the package manager you are using does not already have scikit-learn installed, you can install using `pip install scikit-learn==0.16.1` (This very specific version is important to determine on target activity scores)
 * **pickle**: This python package is required to determine on-target-activity as well. This should already be installed in python 2 and 3. If not, you need to manually install this.
 
-### How to run
+## How to run
 Once you have the dependencies installed, running kRISP-mER is easy. You need to:
 1. **Download** the github directory
 1. **Locate** your sequenced reads file (can be FASTA or FASTQ) and the target-region file (_must_ be FASTA); these files can be anywhere on the filesystem
 1. **Run** the tool with the command: `python krispmer.py <reads_filename> <target_filename> <num_mismatches> <output_file>`
 The arguments, alongwith other options can be seen using `python krispmer.py -h`.
 
-### Do not do
+## Do not do
 1. Do not delete any folder after downloading :)
 1. Do not put the target-region file in any format other than FASTA
 
-### Options available in kRISP-mER
+## Options available in kRISP-mER
