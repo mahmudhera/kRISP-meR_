@@ -93,7 +93,7 @@ def initial_jellyfish_run(reads_file_for_jellyfish):
         candidate_length) + " -s 100M -o " + jf_count_file + " -t 20 -C " + reads_file_for_jellyfish
     jf_command_args = jf_command.split(" ")
     # todo: uncomment this later
-    # subprocess.call(jf_command_args)
+    subprocess.call(jf_command_args)
     return jf_count_file
 
 
@@ -306,20 +306,35 @@ def krispmer_main(parsed_args):
     global target_coverage
     k_spectrum_data_in_target = generate_k_spectrum_of_target_and_count(modified_target_string, jellyfish_binary_file)
     target_coverage = get_target_coverage_after_refining(k_spectrum_data_in_target, read_coverage, inversion_point)
+    print ( 'The determined coverages are: read-coverage=' + str(read_coverage) + " target-count= " + str(target_coverage) )
 
     # annotate all guides
     print('processing total ' + str(len(list(candidates_count_dictionary.keys()))) + ' candidate gRNAs')
     list_candidates = annotate_guides_with_score(candidates_count_dictionary, jellyfish_binary_file, priors, posteriors,
                                                  parsed_args.max_hd, modified_target_string, target_coverage)
-    list_candidates = [c for c in list_candidates if c[1] <= parsed_args.cutoff_score]
+
+    if parsed_args.cutoff_score is not None:
+        list_candidates = [c for c in list_candidates if c[1] <= parsed_args.cutoff_score]
     return list_candidates
 
 
 if __name__ == '__main__':
-    arg_string = 'inputs/read_staphylo.fastq inputs/target20k.txt output/out 0 -r 14 -a AGG TGG'
+    '''arg_string = 'inputs/read_staphylo.fastq inputs/target20k.txt output/out 0 -r 14'
     cut_off_scores = [2.0, 2.5, 3.0, 3.5]
     for c in cut_off_scores:
         arg_string_full = arg_string + ' -c ' + str(c)
         args = parse_arguments(arg_string_full.split())
         gRNAs = krispmer_main(args)
         print ( len(gRNAs) )
+    '''
+    args = parse_arguments()
+    gRNAs = krispmer_main(args)
+    print (len(gRNAs))
+    output_file = open(args.scores_file, 'w')
+    output_file.write('tgt_in_plus,tgt_in_minus,inverse_specificity,strand\n')
+    for gRNA in gRNAs:
+        seq = gRNA[0]
+        score = gRNA[1]
+        strand = gRNA[4]
+        output_file.write(seq + ',' + reverse_complement(seq) + ',' + str(score) + ',' + strand + '\n')
+    output_file.close()
