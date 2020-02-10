@@ -1,3 +1,6 @@
+![image](https://img.shields.io/badge/%20-linux-orange)
+![image](https://img.shields.io/badge/%20-python-blue)
+![image](https://img.shields.io/badge/%20-crispr-yellowgreen)
 # kRISP-mER
 Reference free guide RNA designing tool for CRISPR
 
