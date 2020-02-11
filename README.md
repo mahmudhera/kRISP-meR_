@@ -54,3 +54,14 @@ The arguments, alongwith other options can be seen using `python krispmer.py -h`
 1. Do not put the target-region file in any format other than FASTA
 
 ## Options available in kRISP-mER
+kRISP-mER allows you to design guide RNAs with WGS shotgun reads (in a FASTA or FASTQ file), and a target-region (a FASTA file). With these two, you also have to tell the program the number of mismatches to consider when designing a gRNA. kRISP-mER allows upto 3 mismatches. kRISP-mER does not consider indels (like other established gRNA designing tools). You also have to tell the program the name of the output csv file, where the gRNAs along with their inverted specificity scores and strand information is to be stored.
+
+Besides these four positional (mandatory) arguments, you can also do the following.
+1. `-h`: You can see help with `-h` flag
+1. `-p`: You can tell the program to let you manually choose the read coverage with the flag `-p`. By default, the program automatically calculates the read coverage from the k-spectrum of the sequenced reads
+1. `-e`: You can specify the program to calculate the prior probabilities with EM algorithm on the k-spectrum of the sequenced reads with `-e` flag. See the full paper to understand what the EM algorithm does. By default, EM does not work.
+1. `-s`: You can choose to exclude the gRNAs that contain a stop codon with the flag `-s`. By default, these gRNAs are included in the final output list
+1. `-v`: You can tell kRISP-mER to detect the genetic variation of the individual in the target site using the flag `-v` (which is done with a combination of bowtie2, samtools and Pilon). By default, the target is used as is.
+1. `-n`: You can specify to detect guides from only the positive (5'-3') strand with the flag `-n`. By default, both strands are considered.
+1.  `-c INT`: You can pass a cut-off score for the guides with the flag `-c`. kRISP-mER will then drop all the guides with inverted-specificity higher than the cut-off.
+1. `-a PAM1 PAM2 ...` You can provide kRISP-mER with a list of PAMs to consider with `-a` flag. By default, NGG PAMs are considered.
