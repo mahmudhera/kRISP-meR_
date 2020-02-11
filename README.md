@@ -60,7 +60,7 @@ Besides these four positional (mandatory) arguments, you can also do the followi
 1. `-v`: You can tell kRISP-mER to detect the genetic variation of the individual in the target site using the flag `-v` (which is done with a combination of bowtie2, samtools and Pilon). By default, the target is used as is.
 1. `-n`: You can specify to detect guides from only the positive (5'-3') strand with the flag `-n`. By default, both strands are considered.
 1.  `-c INT`: You can pass a cut-off score for the guides with the flag `-c`. kRISP-mER will then drop all the guides with inverted-specificity higher than the cut-off.
-1. `-a PAM1 PAM2 ...` You can provide kRISP-mER with a list of PAMs to consider with `-a` flag. By default, NGG PAMs are considered.
+1. `-a PAM1 PAM2 ...`: You can provide kRISP-mER with a list of PAMs to consider with `-a` flag. By default, NGG PAMs are considered.
 
 ## Do not do
 1. Do not delete any folder after downloading :)
