@@ -5,7 +5,7 @@
 Reference free guide RNA designing tool for CRISPR
 
 ## What kRISP-mER is
-This a tool to generate personalized guide RNAs for CRISPR without using a reference genome. Instead, kRISP-mER works using the sequenced reads, and a genomic target location (location where CRISPR cleavage is intended).
+This is a tool to generate personalized guide RNAs for CRISPR without using a reference genome. Instead, kRISP-mER works using the sequenced reads, and a genomic target location (location where CRISPR cleavage is intended).
 
 This tool is designed for:
 1. Linux
