@@ -52,6 +52,11 @@ The arguments, along with other options can be seen using `python krispmer.py -h
 **Note**: You may be limited by your workstation resources. kRISP-mER works on sequenced reads by counting the k-mers using Jellyfish. If the reads file is very large, Jellyfish may be out of memory and kill the program. If that happens, you may want to increase the resources you have. kRISP-mER stores the Jellyfish binary file and uses that to calculate the gRNA scores. Therefore, you have to make sure that the workstation filesystem has enough free storage to store this binary file (whose size depends on the size of the sequenced reads). 
 
 ## Options available in kRISP-mER
+Usage:
+```shell script
+python krispmer.py [-h] [-p] [-e] [-s] [-v] [-t] [-n] [-c CUTOFF_SCORE] [-g GENOME] [-a ALTPAMS [ALTPAMS ...]]
+                   <reads_file> <target_file> <output_file> <max_hd>
+```
 kRISP-mER allows you to design guide RNAs with WGS shotgun reads (in a FASTA or FASTQ file), and a target-region (a FASTA file). With these two, you also have to tell the program the number of mismatches to consider when designing a gRNA. kRISP-mER allows upto 3 mismatches. kRISP-mER does not consider indels (like other established gRNA designing tools). You also have to tell the program the name of the output csv file, where the gRNAs along with their inverted specificity scores and strand information is to be stored.
 
 Besides these four positional (mandatory) arguments, you can also do the following.
