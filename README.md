@@ -17,20 +17,20 @@ Other dependencies are elaborated separately.
 ## Dependencies you need to install
 The following installation instructions are _only to help you out_. These installation instructions are **NOT** mandatory to follow. You can install these any way you like. However, if you are having a hard time doing so by yourself, you may find these instructions useful.
 * **samtools**: You can install samtools using the following commands:
-```buildoutcfg
+```shell script
 sudo apt-get update -y
 sudo apt-get install -y samtools
 ```
 * **Biopython**: install using: `pip install biopython`
 * **Python binding of Jellyfish** (gmarics project). This is quite tricky. Need to assess this in detail later. Tried to do the following:
-```buildoutcfg
+```shell script
 ./configure --prefix=$HOME --enable-python-binding
 make -j 4
 make install
 ```
 Python binding means that if you try to import jellyfish from a python script (the code is: `import jellyfish`), that will work and you will be able to invoke Jellyfish program from python.
 If the installation steps mentioned above does not bind with python, (although the documentation of Jellyfish does say that this should): you may try the swig binding instructions from https://github.com/gmarcais/Jellyfish/blob/master/swig/Readme.md).
-```buildoutcfg
+```shell script
 cd swig/python
 python setup.py build
 python setup.py install --prefix=$PREFIX
@@ -44,10 +44,10 @@ python setup.py install --prefix=$PREFIX
 
 ## How to run
 Once you have the dependencies installed, running kRISP-mER is easy. You need to:
-1. **Download** the github directory
+1. **Download** the github repository
 1. **Locate** your sequenced reads file (can be FASTA or FASTQ) and the target-region file (_must_ be FASTA); these files can be anywhere on the filesystem
-1. **Run** the tool with the command: `python krispmer.py <reads_filename> <target_filename> <num_mismatches> <output_file>`
-The arguments, alongwith other options can be seen using `python krispmer.py -h`.
+1. **Run** the tool with the command: `python krispmer.py <reads_filename> <target_filename> <num_mismatches> <output_file>` _after navigating to the directory containing the file krispmer.py_
+The arguments, along with other options can be seen using `python krispmer.py -h`.
 
 ## Options available in kRISP-mER
 kRISP-mER allows you to design guide RNAs with WGS shotgun reads (in a FASTA or FASTQ file), and a target-region (a FASTA file). With these two, you also have to tell the program the number of mismatches to consider when designing a gRNA. kRISP-mER allows upto 3 mismatches. kRISP-mER does not consider indels (like other established gRNA designing tools). You also have to tell the program the name of the output csv file, where the gRNAs along with their inverted specificity scores and strand information is to be stored.
